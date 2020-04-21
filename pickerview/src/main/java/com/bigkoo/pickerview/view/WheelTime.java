@@ -366,14 +366,23 @@ public class WheelTime {
         wv_day.setGravity(gravity);
         //时
         wv_hours = (WheelView) view.findViewById(R.id.hour);
-        wv_hours.setAdapter(new NumericWheelAdapter(0, h));
+        if (startYear == year && startMonth == month && startDay == day) {
+            wv_hours.setAdapter(new NumericWheelAdapter(startHour, 23));
+        } else {
+            wv_hours.setAdapter(new NumericWheelAdapter(0, 23));
+        }
+
 
         wv_hours.setCurrentItem(h);
         wv_hours.setGravity(gravity);
         //分
         wv_minutes = (WheelView) view.findViewById(R.id.min);
-        wv_minutes.setAdapter(new NumericWheelAdapter(0, m));
 
+        if (startYear == year && startMonth == month && startDay == day && startHour == h) {
+            wv_minutes.setAdapter(new NumericWheelAdapter(startMinutes, 59));
+        } else {
+            wv_minutes.setAdapter(new NumericWheelAdapter(0, 59));
+        }
         wv_minutes.setCurrentItem(m);
         wv_minutes.setGravity(gravity);
         //秒
@@ -554,20 +563,20 @@ public class WheelTime {
         int currentHour = 0;
         int currentMinutesIndex = 0;
         int currentMiuntes = 0;
-        if (currentYear==startYear){
-             currentMonthIndex = wv_month.getCurrentItem();
+        if (currentYear == startYear) {
+            currentMonthIndex = wv_month.getCurrentItem();
             currentMonth = currentMonthIndex + startMonth;
             currentDaysIndex = wv_day.getCurrentItem();
-             currentDays = currentDaysIndex + startDay;
-             currentHourIndex = wv_hours.getCurrentItem();
-             currentHour = startHour + currentHourIndex;
-             currentMinutesIndex = wv_minutes.getCurrentItem();
-             currentMiuntes = currentMinutesIndex + startMinutes;
-        }else{
+            currentDays = currentDaysIndex + startDay;
+            currentHourIndex = wv_hours.getCurrentItem();
+            currentHour = startHour + currentHourIndex;
+            currentMinutesIndex = wv_minutes.getCurrentItem();
+            currentMiuntes = currentMinutesIndex + startMinutes;
+        } else {
             currentMonthIndex = wv_month.getCurrentItem();
             currentMonth = currentMonthIndex + 1;
             currentDaysIndex = wv_day.getCurrentItem();
-            currentDays = currentDaysIndex + 1 ;
+            currentDays = currentDaysIndex + 1;
             currentHourIndex = wv_hours.getCurrentItem();
             currentHour = currentHourIndex;
             currentMinutesIndex = wv_minutes.getCurrentItem();
@@ -610,12 +619,12 @@ public class WheelTime {
                         wv_hours.setCurrentItem(wv_hours.getItemsCount() - 1);
                         currentHourIndex = wv_hours.getCurrentItem();
                     }
-                    if (currentHour==endHour){
+                    if (currentHour == endHour) {
                         wv_minutes.setAdapter(new NumericWheelAdapter(0, endMinutes));
                         if (wv_minutes.getItemsCount() < currentHourIndex) {
                             wv_minutes.setCurrentItem(wv_minutes.getItemsCount() - 1);
                         }
-                    }else{
+                    } else {
                         wv_minutes.setAdapter(new NumericWheelAdapter(0, 59));
                         if (wv_minutes.getItemsCount() < currentHourIndex) {
                             wv_minutes.setCurrentItem(wv_minutes.getItemsCount() - 1);

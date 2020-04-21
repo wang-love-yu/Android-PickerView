@@ -101,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             calendarFrom.add(Calendar.MONTH, -1);
             calendarFrom.set(Calendar.HOUR_OF_DAY,19);
             calendarFrom.set(Calendar.MINUTE,50);
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.add(Calendar.YEAR, -1);
+            currentCalendar.add(Calendar.MONTH, -1);
+            currentCalendar.set(Calendar.HOUR_OF_DAY,19);
+            currentCalendar.set(Calendar.MINUTE,50);
             pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
                 @Override
                 public void onTimeSelect(Date date, View v) {
@@ -123,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.i("pvTime", "onCancelClickListener");
                         }
                     })
-                    .setDate(Calendar.getInstance())
+                    .setDate(currentCalendar)
                     .setRangDate(calendarFrom,Calendar.getInstance())
                     .setItemVisibleCount(5) //若设置偶数，实际值会加1（比如设置6，则最大可见条目为7）
                     .setLineSpacingMultiplier(2.0f)
