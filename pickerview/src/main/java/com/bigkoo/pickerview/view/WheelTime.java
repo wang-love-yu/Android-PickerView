@@ -368,6 +368,8 @@ public class WheelTime {
         wv_hours = (WheelView) view.findViewById(R.id.hour);
         if (startYear == year && startMonth == month && startDay == day) {
             wv_hours.setAdapter(new NumericWheelAdapter(startHour, 23));
+        } else if (endYear == year && endMonth == month && endDay == day) {
+            wv_hours.setAdapter(new NumericWheelAdapter(0, endHour));
         } else {
             wv_hours.setAdapter(new NumericWheelAdapter(0, 23));
         }
@@ -380,6 +382,8 @@ public class WheelTime {
 
         if (startYear == year && startMonth == month && startDay == day && startHour == h) {
             wv_minutes.setAdapter(new NumericWheelAdapter(startMinutes, 59));
+        } else if (endYear == year && endMonth == month && endDay == day && endHour == h) {
+            wv_minutes.setAdapter(new NumericWheelAdapter(startMinutes, m));
         } else {
             wv_minutes.setAdapter(new NumericWheelAdapter(0, 59));
         }
