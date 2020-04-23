@@ -435,6 +435,8 @@ public class WheelTime {
                     if (currentMonthItem > wv_month.getAdapter().getItemsCount() - 1) {
                         currentMonthItem = wv_month.getAdapter().getItemsCount() - 1;
                         wv_month.setCurrentItem(currentMonthItem);
+                    }else{
+                        wv_month.setCurrentItem(currentMonthItem);
                     }
 
                     int month = currentMonthItem + startMonth;
