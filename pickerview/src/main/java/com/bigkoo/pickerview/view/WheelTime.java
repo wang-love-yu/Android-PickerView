@@ -703,6 +703,10 @@ public class WheelTime {
         if (currentItem > wv_day.getAdapter().getItemsCount() - 1) {
             currentItem = wv_day.getAdapter().getItemsCount() - 1;
             wv_day.setCurrentItem(currentItem);
+        }else{
+            //修改 日滑到顶，月滑到顶，年滑到底，导致日不能往上滑问题
+            //原理是 设置完日数据adapter后，需要重新选一下wheelView的当前位置
+            wv_day.setCurrentItem(currentItem);
         }
     }
 
