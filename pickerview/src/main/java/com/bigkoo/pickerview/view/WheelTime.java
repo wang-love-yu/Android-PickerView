@@ -366,16 +366,19 @@ public class WheelTime {
         wv_day.setGravity(gravity);
         //时
         wv_hours = (WheelView) view.findViewById(R.id.hour);
-        if (startYear == year && startMonth == month+1 && startDay == day) {
+        if (startYear == year && startMonth == month + 1 && startDay == day) {
             wv_hours.setAdapter(new NumericWheelAdapter(startHour, 23));
-        } else if (endYear == year && endMonth == month+1 && endDay == day) {
+            //如果是当前选择时间与起始时间一致，选择下标应该为第一位
+            wv_hours.setCurrentItem(0);
+        } else if (endYear == year && endMonth == month + 1 && endDay == day) {
             wv_hours.setAdapter(new NumericWheelAdapter(0, endHour));
+            // 如果是当前选择时间与结束时间一致，选择最后一个
+            wv_hours.setCurrentItem(endHour);
         } else {
             wv_hours.setAdapter(new NumericWheelAdapter(0, 23));
+            wv_hours.setCurrentItem(h);
         }
 
-
-        wv_hours.setCurrentItem(h);
         wv_hours.setGravity(gravity);
         //分
         wv_minutes = (WheelView) view.findViewById(R.id.min);
@@ -435,7 +438,7 @@ public class WheelTime {
                     if (currentMonthItem > wv_month.getAdapter().getItemsCount() - 1) {
                         currentMonthItem = wv_month.getAdapter().getItemsCount() - 1;
                         wv_month.setCurrentItem(currentMonthItem);
-                    }else{
+                    } else {
                         wv_month.setCurrentItem(currentMonthItem);
                     }
 
@@ -705,7 +708,7 @@ public class WheelTime {
         if (currentItem > wv_day.getAdapter().getItemsCount() - 1) {
             currentItem = wv_day.getAdapter().getItemsCount() - 1;
             wv_day.setCurrentItem(currentItem);
-        }else{
+        } else {
             //修改 日滑到顶，月滑到顶，年滑到底，导致日不能往上滑问题
             //原理是 设置完日数据adapter后，需要重新选一下wheelView的当前位置
             wv_day.setCurrentItem(currentItem);
