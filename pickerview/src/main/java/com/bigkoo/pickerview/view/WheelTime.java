@@ -385,12 +385,17 @@ public class WheelTime {
 
         if (startYear == year && startMonth == month + 1 && startDay == day && startHour == h) {
             wv_minutes.setAdapter(new NumericWheelAdapter(startMinutes, 59));
+            //如果是当前选择时间与起始时间一致，选择下标应该为第一位
+            wv_minutes.setCurrentItem(0);
         } else if (endYear == year && endMonth == month + 1 && endDay == day && endHour == h) {
-            wv_minutes.setAdapter(new NumericWheelAdapter(startMinutes, m));
+            wv_minutes.setAdapter(new NumericWheelAdapter(0, m));
+            // 如果是当前选择时间与结束时间一致，选择最后一个
+            wv_minutes.setCurrentItem(m);
         } else {
             wv_minutes.setAdapter(new NumericWheelAdapter(0, 59));
+            wv_minutes.setCurrentItem(m);
+
         }
-        wv_minutes.setCurrentItem(m);
         wv_minutes.setGravity(gravity);
         //秒
         wv_seconds = (WheelView) view.findViewById(R.id.second);
