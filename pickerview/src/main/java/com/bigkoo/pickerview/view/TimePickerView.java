@@ -83,6 +83,8 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
     }
 
     private void initWheelTime(LinearLayout timePickerView) {
+
+
         wheelTime = new WheelTime(timePickerView, mPickerOptions.type, mPickerOptions.textGravity, mPickerOptions.textSizeContent);
         if (mPickerOptions.timeSelectChangeListener != null) {
             wheelTime.setSelectChangeCallback(new ISelectTimeCallback() {
@@ -99,7 +101,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         }
 
         wheelTime.setLunarMode(mPickerOptions.isLunarCalendar);
-
+        wheelTime.setSupportForeverChoice(mPickerOptions.isSupportForeverChoice);
         if (mPickerOptions.startYear != 0 && mPickerOptions.endYear != 0
                 && mPickerOptions.startYear <= mPickerOptions.endYear) {
             setRange();
@@ -211,6 +213,10 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             seconds = mPickerOptions.date.get(Calendar.SECOND);
         }
 
+        if (true) {
+
+        }
+
         wheelTime.setPicker(year, month, day, hours, minute, seconds);
     }
 
@@ -229,7 +235,9 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
     }
 
     public void returnData() {
-        if (mPickerOptions.timeSelectListener != null) {
+        if (mPickerOptions.isSupportForeverChoice && mPickerOptions.onChoiceForeverListener != null && wheelTime.isChoiceForever) {
+            mPickerOptions.onChoiceForeverListener.onChoiceForever();
+        } else if (mPickerOptions.timeSelectListener != null) {
             try {
                 Date date = WheelTime.dateFormat.parse(wheelTime.getTime());
                 mPickerOptions.timeSelectListener.onTimeSelect(date, clickView);

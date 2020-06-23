@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.bigkoo.pickerview.R;
 import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnChoiceForeverListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
@@ -67,6 +68,10 @@ public class PickerOptions {
     public String label_year, label_month, label_day, label_hours, label_minutes, label_seconds;//单位
     public int x_offset_year, x_offset_month, x_offset_day, x_offset_hours, x_offset_minutes, x_offset_seconds;//单位
 
+    //针对于身份证有效期选择时候需要设置个永久有效
+    public boolean isSupportForeverChoice = false;
+
+    public OnChoiceForeverListener onChoiceForeverListener;
 
     public PickerOptions(int buildType) {
         if (buildType == TYPE_PICKER_OPTIONS) {

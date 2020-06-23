@@ -17,7 +17,12 @@
         android:gravity="center"
         android:minHeight="150dp"
         android:orientation="horizontal">
-
+        <com.contrarywind.view.WheelView
+            android:id="@+id/type"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
         <com.contrarywind.view.WheelView
             android:id="@+id/year"
             android:layout_width="0dp"

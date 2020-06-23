@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.bigkoo.pickerview.configure.PickerOptions;
 import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnChoiceForeverListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
@@ -307,8 +308,20 @@ public class TimePickerBuilder {
         mPickerOptions.timeSelectChangeListener = listener;
         return this;
     }
+    //针对于身份证有效期选择时候需要设置个永久有效
+    public TimePickerBuilder setSupportForeverChoice(boolean support) {
+        mPickerOptions.isSupportForeverChoice = support;
+        return this;
+    }
+    //针对于身份证有效期选择时候需要设置个永久有效 监听回调
+
+    public TimePickerBuilder setChoiceForeverListener(OnChoiceForeverListener support) {
+        mPickerOptions.onChoiceForeverListener = support;
+        return this;
+    }
 
     public TimePickerView build() {
         return new TimePickerView(mPickerOptions);
     }
+
 }

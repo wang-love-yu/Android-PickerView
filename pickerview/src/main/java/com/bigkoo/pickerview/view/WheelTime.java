@@ -14,9 +14,12 @@ import com.contrarywind.view.WheelView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.contrarywind.view.WheelView.DividerType.FILL;
 
 
 public class WheelTime {
@@ -29,6 +32,7 @@ public class WheelTime {
     private WheelView wv_hours;
     private WheelView wv_minutes;
     private WheelView wv_seconds;
+    private WheelView wv_type;
     private int gravity;
 
     private boolean[] type;
@@ -55,12 +59,26 @@ public class WheelTime {
     private boolean isLunarCalendar = false;
     private ISelectTimeCallback mSelectChangeCallback;
 
+    private int mDefaultYear = 0;
+    private int mDefaultMonth = 0;
+    private int mDefaultDay = 0;
+    private int mDefaultH = 0;
+    private int mDefaultM = 0;
+    private int mDefaultS = 0;
+    private String label_year, label_month, label_day, label_hours, label_mins, label_seconds;
+    //针对于身份证有效期选择时候需要设置个永久有效
+    private boolean isSupportForeverChoice = false;
+    public boolean isChoiceForever = false;
+    public static final String FOREVER = "1";
+
     public WheelTime(View view, boolean[] type, int gravity, int textSize) {
         super();
         this.view = view;
         this.type = type;
         this.gravity = gravity;
         this.textSize = textSize;
+        initWheelView();
+
     }
 
     public void setLunarMode(boolean isLunarCalendar) {
@@ -75,12 +93,114 @@ public class WheelTime {
         this.setPicker(year, month, day, 0, 0, 0);
     }
 
-    public void setPicker(int year, final int month, int day, int h, int m, int s) {
+    public void setSupportForeverChoice(boolean isSupportForeverChoice) {
+        this.isSupportForeverChoice = isSupportForeverChoice;
+    }
+
+    public void setPicker(final int year, final int month, final int day, final int h, final int m, final int s) {
         if (isLunarCalendar) {
             int[] lunar = LunarCalendar.solarToLunar(year, month + 1, day);
             setLunar(lunar[0], lunar[1] - 1, lunar[2], lunar[3] == 1, h, m, s);
         } else {
-            setSolar(year, month, day, h, m, s);
+            mDefaultYear = year;
+            mDefaultMonth = month;
+            mDefaultDay = day;
+            mDefaultH = h;
+            mDefaultM = m;
+            mDefaultS = s;
+
+            initWheelView();
+
+            if (isSupportForeverChoice) {
+
+                wv_type = (WheelView) view.findViewById(R.id.type);
+                List<String> values = new ArrayList<String>();
+                values.add("期限有效");
+                values.add("永久有效");
+                if (wv_type != null) {
+                    wv_type.setAdapter(new ArrayWheelAdapter<String>(values));
+                    wv_type.setVisibility(View.VISIBLE);
+                    wv_type.getItemsCount();
+                    wv_type.setCyclic(false);
+                    wv_type.setGravity(gravity);
+                    wv_type.setCurrentItem(0);
+                    wv_type.setLabel("");
+                    setSolar(year, month, day, h, m, s);
+                    wv_type.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+                        @Override
+                        public void onItemSelected(int index) {
+                            Log.d(TAG, "onItemSelected: index= $" + index);
+                            if (index == 1) {
+                                isChoiceForever = true;
+                                setUnlimitedFormat(R.id.year);
+                                setUnlimitedFormat(R.id.month);
+                                setUnlimitedFormat(R.id.day);
+                                setUnlimitedFormat(R.id.hour);
+                                setUnlimitedFormat(R.id.min);
+                                setUnlimitedFormat(R.id.second);
+                            } else {
+                                isChoiceForever = false;
+                                setSolar(year, month, day, h, m, s);
+                                setLabels(label_year, label_month, label_day, label_hours, label_mins, label_seconds);
+                            }
+                        }
+                    });
+                    if (type.length != 6) {
+                        throw new IllegalArgumentException("type[] length is not 6");
+                    }
+                    wv_year.setDividerType(FILL);
+                    wv_year.setVisibility(type[0] ? View.VISIBLE : View.GONE);
+                    wv_month.setVisibility(type[1] ? View.VISIBLE : View.GONE);
+                    wv_day.setVisibility(type[2] ? View.VISIBLE : View.GONE);
+                    wv_hours.setVisibility(type[3] ? View.VISIBLE : View.GONE);
+                    wv_minutes.setVisibility(type[4] ? View.VISIBLE : View.GONE);
+                    wv_seconds.setVisibility(type[5] ? View.VISIBLE : View.GONE);
+                    setContentTextSize();
+                }
+            } else {
+                setSolar(year, month, day, h, m, s);
+            }
+        }
+    }
+
+    private void initWheelView() {
+        if (wv_type == null) {
+            wv_type = view.findViewById(R.id.type);
+        }
+        if (wv_year == null) {
+            wv_year = view.findViewById(R.id.year);
+        }
+        if (wv_month == null) {
+            wv_month = view.findViewById(R.id.month);
+
+        }
+        if (wv_day == null) {
+            wv_day = view.findViewById(R.id.day);
+        }
+        if (wv_hours == null) {
+            wv_hours = view.findViewById(R.id.hour);
+
+        }
+        if (wv_minutes == null) {
+            wv_minutes = view.findViewById(R.id.min);
+        }
+        if (wv_seconds == null) {
+            wv_seconds = view.findViewById(R.id.second);
+        }
+    }
+
+    /***
+     * 设置内容为 -
+     * */
+    private void setUnlimitedFormat(int p) {
+        WheelView wheelView = (WheelView) view.findViewById(p);
+        if (wheelView != null) {
+            List<String> list = new ArrayList();
+            list.add("-");
+            wheelView.setAdapter(new ArrayWheelAdapter(list));
+            wheelView.setLabel("");
+            wheelView.setCurrentItem(0);
         }
     }
 
@@ -253,7 +373,6 @@ public class WheelTime {
 
         final List<String> list_big = Arrays.asList(months_big);
         final List<String> list_little = Arrays.asList(months_little);
-
         currentYear = year;
         // 年
         wv_year = (WheelView) view.findViewById(R.id.year);
@@ -722,6 +841,9 @@ public class WheelTime {
 
 
     private void setContentTextSize() {
+        if (wv_type != null) {
+            wv_type.setTextSize(textSize);
+        }
         wv_day.setTextSize(textSize);
         wv_month.setTextSize(textSize);
         wv_year.setTextSize(textSize);
@@ -732,6 +854,13 @@ public class WheelTime {
 
 
     public void setLabels(String label_year, String label_month, String label_day, String label_hours, String label_mins, String label_seconds) {
+        initWheelView();
+        this.label_year = label_year;
+        this.label_month = label_month;
+        this.label_day = label_day;
+        this.label_hours = label_hours;
+        this.label_mins = label_mins;
+        this.label_seconds = label_seconds;
         if (isLunarCalendar) {
             return;
         }
@@ -794,6 +923,9 @@ public class WheelTime {
     }
 
     public String getTime() {
+        if (isChoiceForever) {
+            return FOREVER;
+        }
         if (isLunarCalendar) {
             //如果是农历 返回对应的公历时间
             return getLunarTime();
@@ -807,7 +939,7 @@ public class WheelTime {
                         .append((wv_month.getCurrentItem() + startMonth)).append("-")
                         .append((wv_day.getCurrentItem() + startDay)).append(" ")
                         .append(wv_hours.getCurrentItem() + startHour).append(":")
-                        .append(wv_minutes.getCurrentItem()+startMinutes).append(":")
+                        .append(wv_minutes.getCurrentItem() + startMinutes).append(":")
                         .append(wv_seconds.getCurrentItem());
             } else {
                 sb.append((wv_year.getCurrentItem() + startYear)).append("-")
@@ -968,6 +1100,9 @@ public class WheelTime {
      * @param lineSpacingMultiplier
      */
     public void setLineSpacingMultiplier(float lineSpacingMultiplier) {
+        if (wv_type != null) {
+            wv_type.setLineSpacingMultiplier(lineSpacingMultiplier);
+        }
         wv_day.setLineSpacingMultiplier(lineSpacingMultiplier);
         wv_month.setLineSpacingMultiplier(lineSpacingMultiplier);
         wv_year.setLineSpacingMultiplier(lineSpacingMultiplier);
@@ -1049,6 +1184,10 @@ public class WheelTime {
     }
 
     public void setItemsVisible(int itemsVisibleCount) {
+        wv_type = view.findViewById(R.id.type);
+        if (wv_type != null) {
+            wv_type.setItemsVisibleCount(itemsVisibleCount);
+        }
         wv_day.setItemsVisibleCount(itemsVisibleCount);
         wv_month.setItemsVisibleCount(itemsVisibleCount);
         wv_year.setItemsVisibleCount(itemsVisibleCount);
