@@ -153,10 +153,17 @@ public class WheelTime {
                     wv_year.setVisibility(type[0] ? View.VISIBLE : View.GONE);
                     wv_month.setVisibility(type[1] ? View.VISIBLE : View.GONE);
                     wv_day.setVisibility(type[2] ? View.VISIBLE : View.GONE);
-                    wv_hours.setVisibility(type[3] ? View.VISIBLE : View.GONE);
+                    wv_day.setVisibility(type[3] ? View.VISIBLE : View.GONE);
                     wv_minutes.setVisibility(type[4] ? View.VISIBLE : View.GONE);
                     wv_seconds.setVisibility(type[5] ? View.VISIBLE : View.GONE);
                     setContentTextSize();
+                    wv_year.setOnItemSelectedListener(null);
+                    wv_month.setOnItemSelectedListener(null);
+                    wv_day.setOnItemSelectedListener(null);
+                    wv_day.setOnItemSelectedListener(null);
+                    wv_minutes.setOnItemSelectedListener(null);
+                    wv_seconds.setOnItemSelectedListener(null);
+
                 }
             } else {
                 setSolar(year, month, day, h, m, s);
