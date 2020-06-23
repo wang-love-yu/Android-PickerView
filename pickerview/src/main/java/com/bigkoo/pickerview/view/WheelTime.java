@@ -116,7 +116,7 @@ public class WheelTime {
                 wv_type = (WheelView) view.findViewById(R.id.type);
                 List<String> values = new ArrayList<String>();
                 values.add("期限有效");
-                values.add("永久有效");
+                values.add("长期有效");
                 if (wv_type != null) {
                     wv_type.setAdapter(new ArrayWheelAdapter<String>(values));
                     wv_type.setVisibility(View.VISIBLE);
